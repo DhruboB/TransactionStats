@@ -3,6 +3,7 @@ package in.dhrubo.demo.trxnstats.bo;
 import com.google.common.hash.Hashing;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.Objects;
 
 public class Transaction {
@@ -11,13 +12,14 @@ public class Transaction {
   private Date timestamp;
   private String hash;
   private boolean isValid = false;
+  private SimpleDateFormat output = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS'Z'");
 
   public Transaction(){
     super();
   }
 
   public Transaction(double amount, Date timestamp) {
-    new Transaction();
+    super();
     this.amount = amount;
     this.timestamp = timestamp;
     this.hash = getHashId();
@@ -67,7 +69,7 @@ public class Transaction {
   public String toString() {
     return "{" +
         "\"amount\"=\"" + amount + "\"," +
-        "\"timestamp\"=\""  + timestamp + "\"," +
+        "\"timestamp\"=\""  + output.format(timestamp) + "\"," +
         "\"hash\"=\""  + hash + "\"" +
         "}";
   }

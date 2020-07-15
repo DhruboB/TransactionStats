@@ -2,14 +2,16 @@ package in.dhrubo.demo.trxnstats.controller;
 
 import in.dhrubo.demo.trxnstats.bo.Statistics;
 import in.dhrubo.demo.trxnstats.bo.Transaction;
-import in.dhrubo.demo.trxnstats.cache.TrxnCache;
 import in.dhrubo.demo.trxnstats.exception.TransactionInvalidException;
+import in.dhrubo.demo.trxnstats.response.AppResponse;
+import in.dhrubo.demo.trxnstats.service.TrxnService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class TrxnController {
 
-  private static TrxnCache trxnCache = new TrxnCache();
+  private TrxnService trxnService = new TrxnService();
 
   @GetMapping("/")
   public String index(){
@@ -17,26 +19,27 @@ public class TrxnController {
   }
 
   @PostMapping("/transaction")
-  public Transaction putTransactions(@RequestBody Transaction trxn) throws TransactionInvalidException {
-    trxnCache.addTrxn(trxn);
-    System.out.println("Transaction : " + trxn.getHashId() + " is added.");
-    return trxn;
+  public ResponseEntity<AppResponse> addTransactions(@RequestBody Transaction trxn) throws TransactionInvalidException {
+    AppResponse res = trxnService.addTrxn(trxn);
+    System.out.println("Transaction : " + trxn.getHashId() + " is processed.");
+    return ResponseEntity.ok(res);
   }
 
   @GetMapping("/statistics")
-  public Statistics getStatistics(){
-    return trxnCache.getStatistics();
+  public ResponseEntity<Statistics> getStatistics(){
+    Statistics stat = trxnService.getStatistics();
+    return ResponseEntity.ok(stat);
   }
 
   @DeleteMapping("/transaction")
-  public String removeTransaction(@RequestBody Transaction trxn){
-    trxnCache.removeTrxn(trxn);
-    return "message: \"Transaction " + trxn.getHashId() + " is removed. \"";
+  public ResponseEntity<AppResponse> removeTransaction(@RequestBody Transaction trxn){
+    AppResponse res = trxnService.removeTrxn(trxn);
+    return ResponseEntity.ok(res);
   }
 
   @DeleteMapping("/transactions")
-  public String removeTransactions(){
-    trxnCache.removeAllTrxn();
-    return "message: \" All prior Transactions are removed. \"";
+  public ResponseEntity<AppResponse> removeTransactions(){
+    AppResponse res =  trxnService.removeAllTrxn();
+    return ResponseEntity.ok(res);
   }
 }

@@ -1,8 +1,10 @@
 package in.dhrubo.demo.trxnstats.exception;
 
+import in.dhrubo.demo.trxnstats.response.AppResponse;
+
 public class TransactionInvalidException extends Throwable {
 
-  private AppExceptionMsg appExceptionMsg = new AppExceptionMsg();
+  private AppResponse exceptionResponse = new AppResponse(AppResponse.JSON_INVALID_FIELDS_CODE,"Invalid Transaction",null);
 
   public TransactionInvalidException(){
     super();
@@ -10,11 +12,9 @@ public class TransactionInvalidException extends Throwable {
 
   public TransactionInvalidException(String message){
     super(message);
-    appExceptionMsg.setCode("APP001");
-    appExceptionMsg.setMessage("Invalid Transaction");
   }
 
-  public AppExceptionMsg getAppExceptionMsg() {
-    return appExceptionMsg;
+  public AppResponse getExceptionResponse() {
+    return exceptionResponse;
   }
 }

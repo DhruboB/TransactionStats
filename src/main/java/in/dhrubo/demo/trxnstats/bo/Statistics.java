@@ -3,27 +3,33 @@ package in.dhrubo.demo.trxnstats.bo;
 import org.springframework.scheduling.annotation.Async;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 public class Statistics {
 
-  private BigDecimal sum = new BigDecimal(0.0);
-  private BigDecimal avg = new BigDecimal(0.0);
-  private BigDecimal max = new BigDecimal(0.0);
-  private BigDecimal min = new BigDecimal(0.0);
+  private static Statistics self = new Statistics(); ;
+  private BigDecimal sum = new BigDecimal(0.0).setScale(2, RoundingMode.HALF_UP);
+  private BigDecimal avg = new BigDecimal(0.0).setScale(2, RoundingMode.HALF_UP);
+  private BigDecimal max = new BigDecimal(0.0).setScale(2, RoundingMode.HALF_UP);
+  private BigDecimal min = new BigDecimal(0.0).setScale(2, RoundingMode.HALF_UP);
   private long count;
 
-  public Statistics() {
+  private Statistics() {
     super();
   }
 
+  public static Statistics getInstance(){
+    return self;
+  }
+
   public Statistics(BigDecimal sum, BigDecimal avg, BigDecimal max, BigDecimal min, long count) {
-    new Statistics();
-    this.sum = sum;
-    this.avg = avg;
-    this.max = max;
-    this.min = min;
-    this.count = count;
+    self = getInstance();
+    self.sum = sum.setScale(2, RoundingMode.HALF_UP);
+    self.avg = avg.setScale(2, RoundingMode.HALF_UP);
+    self.max = max.setScale(2, RoundingMode.HALF_UP);
+    self.min = min.setScale(2, RoundingMode.HALF_UP);
+    self.count = count;
   }
 
   public BigDecimal getSum() {
@@ -75,18 +81,18 @@ public class Statistics {
     }
     DoubleSummaryStatistics stat = transactions.stream().mapToDouble(Transaction::getAmount)
         .summaryStatistics();
-    sum = new BigDecimal(stat.getSum());
-    avg = new BigDecimal(stat.getAverage());
-    max = new BigDecimal(stat.getMax());
-    min = new BigDecimal(stat.getMin());
+    sum = new BigDecimal(stat.getSum()).setScale(2, RoundingMode.HALF_UP);
+    avg = new BigDecimal(stat.getAverage()).setScale(2, RoundingMode.HALF_UP);
+    max = new BigDecimal(stat.getMax()).setScale(2, RoundingMode.HALF_UP);
+    min = new BigDecimal(stat.getMin()).setScale(2, RoundingMode.HALF_UP);
     count = stat.getCount();
   }
 
   public void resetStats(){
-    sum = new BigDecimal(0);
-    avg = new BigDecimal(0);
-    max = new BigDecimal(0);
-    min = new BigDecimal(0);
+    sum = new BigDecimal(0).setScale(2, RoundingMode.HALF_UP);;
+    avg = new BigDecimal(0).setScale(2, RoundingMode.HALF_UP);;
+    max = new BigDecimal(0).setScale(2, RoundingMode.HALF_UP);;
+    min = new BigDecimal(0).setScale(2, RoundingMode.HALF_UP);;
     count = 0;
   }
 }
